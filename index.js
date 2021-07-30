@@ -34,7 +34,7 @@ data1:
 data2:
     .float 0.4, 0.3, 0.2, 0.1
 message:
-    .ascii  "Helloworld!\n"
+    .ascii  "Helloworld!\\n"
 `;
 
 var editor = CodeMirror(
@@ -74,19 +74,38 @@ run.onclick = function() {
       let trace_log_begin = false;
 
       for (let i = 0; i < lines.length; i++) {
+        if (lines[i].startsWith('[asm_analyzer]')) {
+          let msg = document.createElement('div');
+          let icon = msg.appendChild(document.createElement('span'));
+          icon.innerHTML = 'ii';
+          icon.className = 'asm_analyzer_icon';
+          msg.appendChild(document.createTextNode(lines[i].substring(15)));
+          msg.className = 'asm_analyzer';
+
+          let l = -1;
+          if (cur_line) l = parseInt(cur_line.line, 10) - 1
+
+          let options = {};
+          if (l < 0) {
+            l = 0;
+            options.above = true;
+          }
+          widgets.push(editor.getDoc().addLineWidget(l, msg, options));
+        }
+
         if (!trace_log_begin) {
           // compile error in format  "file:line_number: reason"
           let m = lines[i].match(/[^:]*:(\d+):\s(.*)/);
           if (m) {
-            var msg = document.createElement("div");
-            var icon = msg.appendChild(document.createElement("span"));
-            icon.innerHTML = "!!";
-            icon.className = "compile_error_icon";
+            let msg = document.createElement('div');
+            let icon = msg.appendChild(document.createElement('span'));
+            icon.innerHTML = '!!';
+            icon.className = 'compile_error_icon';
             msg.appendChild(document.createTextNode(m[2]));
-            msg.className = "compile_error";
+            msg.className = 'compile_error';
 
-            widgets.push(editor.getDoc().addLineWidget(
-                parseInt(m[1], 10) - 1, msg));
+            widgets.push(
+                editor.getDoc().addLineWidget(parseInt(m[1], 10) - 1, msg));
           }
           if (lines[i].startsWith('tracee')) trace_log_begin = true;
         }

@@ -264,8 +264,11 @@ int main(int argc, char *argv[]) {
   long orig_rax;
   struct user_regs_struct regs;
   struct iovec iov;
-  const char *exe_path = "./a1.out";
   const char *asm_path = argv[1];
+  const char *exe_path = argv[2];
+
+  if (exe_path == NULL)
+    exe_path = "./a1.out";
 
   asm_analyzer aa(asm_path, exe_path, false);
 
@@ -306,35 +309,35 @@ int main(int argc, char *argv[]) {
     // execl("/bin/ls", "ls", "-l", "/proc/self/task/", NULL);
   } else {
     // wait for child process's state change
-    printf("[asm_analyzer] tracing child process %d\n", child);
+    printf("[asm_analyzer] child process %d start...\n", child);
 
     try {
       while (1) {
         wait(&wstatus);
 
         if (WIFEXITED(wstatus)) {
-          printf("[asm_analyzer] callee exit normally with code %d\n",
-                 WEXITSTATUS(wstatus));
+          printf("[asm_analyzer] child process %d exit normally with code %d\n",
+                 child, WEXITSTATUS(wstatus));
           break;
         }
 
         if (WIFSIGNALED(wstatus)) {
           printf(
-              "[asm_analyzer] child process was terminated by signal %d: %s\n",
-              WTERMSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
+              "[asm_analyzer] child process %d was terminated by signal %d: %s\n",
+              child, WTERMSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
           break;
         }
 
         if (!WIFSTOPPED(wstatus)) {
-          printf("[asm_analyzer] child process was not stopped on wait, "
-                 "continue...!\n");
+          printf("[asm_analyzer] child process %d was not stopped on wait, "
+                 "continue...!\n", child);
           continue;
         }
 
         int sig = WSTOPSIG(wstatus);
         if (sig != SIGTRAP) {
-          printf("[asm_analyzer] child process was stopped by signal %d: %s\n",
-                 WSTOPSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
+          printf("[asm_analyzer] child process %d was stopped by signal %d: %s\n",
+                 child, WSTOPSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
           break;
         }
 

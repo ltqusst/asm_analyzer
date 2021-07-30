@@ -34,7 +34,7 @@ app.post('/run', async function (req, res) {
       fs.writeFile(`${folder}/input.s`, req.body.src, function (err){
         if (err) return console.log(err);
       
-        child_process.exec(`./a.out ./${folder}/input.s`, 
+        child_process.exec(`./a.out ./${folder}/input.s ./${folder}/a.out`, 
           function(error, stdout, stderr){
             if (error)
               console.log(error);
