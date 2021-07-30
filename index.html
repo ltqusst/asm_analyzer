@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online ASM</title>
+
+    <!--
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/ace.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/theme-chrome.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.5/mode-assembly_x86.js"></script>
+-->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.52.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/mode/gas/gas.min.js"></script>
+
+    <style type="text/css">
+        #editor {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            font-size: 12px;
+        }
+
+        .inline_widget {
+            color: gray;
+            margin: 0px;
+            font-style: normal;
+        }
+
+        .compile_error_icon {
+            color: white;
+            background-color: red;
+            font-weight: bold;
+            border-radius: 50%;
+            padding: 0 3px;
+            margin-right: 7px;
+        }
+
+        .compile_error {
+            font-family: arial;
+            font-size: 100%;
+            background: #ffa;
+            color: #a00;
+            padding: 2px 5px 3px;
+        }
+
+        .CodeMirror {
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <button id=run>RUN</button>
+    <div id=editor>
+
+    </div>
+</body>
+
+<footer>
+    <script src="./index.js"></script>
+</footer>
+
+</html>
