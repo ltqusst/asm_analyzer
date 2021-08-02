@@ -243,11 +243,17 @@ struct asm_analyzer {
     cur_xsave = xsave;
 
     auto it_odl = objdump_map.find(regs.rip);
-    if (it_odl != objdump_map.end())
-      std::cout << objdumps[it_odl->second] << std::endl;
-    else {
+    if (it_odl != objdump_map.end()) {
+      objdump_line &odl = objdumps[it_odl->second];
+      std::cout << odl << std::endl;
+      if (odl.src_code.find("syscall") != std::string::npos) {
+        std::ostringstream g;
+        g << "Tracee is not allowed to do syscall!";
+        throw std::runtime_error(g.str());
+      }
+    } else {
       std::ostringstream g;
-      g << "Callee is running at unknown RIP: 0x" << std::hex << regs.rip;
+      g << "Tracee is running at unknown RIP: 0x" << std::hex << regs.rip;
       throw std::runtime_error(g.str());
     }
   }
@@ -375,7 +381,8 @@ int main(int argc, char *argv[]) {
       }
 
       if (step >= max_steps)
-        printf("[asm_analyzer] the program exceeds max steps allowed : %ld\n", step);
+        printf("[asm_analyzer] the program exceeds max steps allowed : %ld\n",
+               step);
 
     } catch (std::exception &e) {
       printf("[asm_analyzer] exception : %s\n", e.what());
