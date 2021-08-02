@@ -266,6 +266,7 @@ int main(int argc, char *argv[]) {
   struct iovec iov;
   const char *asm_path = argv[1];
   const char *exe_path = argv[2];
+  const long max_steps = 1000;
 
   if (exe_path == NULL)
     exe_path = "./a1.out";
@@ -312,7 +313,9 @@ int main(int argc, char *argv[]) {
     printf("[asm_analyzer] child process %d start...\n", child);
 
     try {
-      while (1) {
+      long step;
+
+      for (step = 0; step < max_steps; step++) {
         wait(&wstatus);
 
         if (WIFEXITED(wstatus)) {
@@ -322,22 +325,24 @@ int main(int argc, char *argv[]) {
         }
 
         if (WIFSIGNALED(wstatus)) {
-          printf(
-              "[asm_analyzer] child process %d was terminated by signal %d: %s\n",
-              child, WTERMSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
+          printf("[asm_analyzer] child process %d was terminated by signal %d: "
+                 "%s\n",
+                 child, WTERMSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
           break;
         }
 
         if (!WIFSTOPPED(wstatus)) {
           printf("[asm_analyzer] child process %d was not stopped on wait, "
-                 "continue...!\n", child);
+                 "continue...!\n",
+                 child);
           continue;
         }
 
         int sig = WSTOPSIG(wstatus);
         if (sig != SIGTRAP) {
-          printf("[asm_analyzer] child process %d was stopped by signal %d: %s\n",
-                 child, WSTOPSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
+          printf(
+              "[asm_analyzer] child process %d was stopped by signal %d: %s\n",
+              child, WSTOPSIG(wstatus), strsignal(WSTOPSIG(wstatus)));
           break;
         }
 
@@ -368,10 +373,13 @@ int main(int argc, char *argv[]) {
         ptrace(PTRACE_SINGLESTEP, child, NULL, NULL);
         // ptrace(PTRACE_CONT, child, NULL, NULL);
       }
+
+      if (step >= max_steps)
+        printf("[asm_analyzer] the program exceeds max steps allowed : %ld\n", step);
+
     } catch (std::exception &e) {
       printf("[asm_analyzer] exception : %s\n", e.what());
     }
   }
-
   return 0;
 }
