@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const child_process = require('child_process')
 const fs = require('fs');
 const glob = require('glob')
+const readline = require('readline');
+const util = require('util')
 
 const app = express()
 const port = 80
@@ -12,25 +14,45 @@ const port = 80
 // list all files under example folder
 var examples;
 
-function baseName(str)
-{
-   var base = new String(str).substring(str.lastIndexOf('/') + 1); 
-    if(base.lastIndexOf(".") != -1)       
-        base = base.substring(0, base.lastIndexOf("."));
-   return base;
+function baseName(str) {
+  var base = new String(str).substring(str.lastIndexOf('/') + 1);
+  if (base.lastIndexOf('.') != -1)
+    base = base.substring(0, base.lastIndexOf('.'));
+  return base;
 }
 
-function update_examples() {
-  examples = [];
-  glob('./example/*.s', function(er, files) {
-    for(let fpath of files) {
-      examples.push(baseName(fpath));
-    }
-    console.log(examples);
+async function getFirstLine(pathToFile) {
+  const readable = fs.createReadStream(pathToFile);
+  const reader = readline.createInterface({input: readable});
+  const line = await new Promise((resolve) => {
+    reader.on('line', (line) => {
+      reader.close();
+      resolve(line);
+    });
   });
+  readable.close();
+  return line;
+}
+
+glob2 = util.promisify(glob);
+exec2 = util.promisify(child_process.exec);
+writeFile2 = util.promisify(fs.writeFile);
+mkdtemp2 = util.promisify(fs.mkdtemp);
+
+async function update_examples() {
+  files = await glob2('./example/*.s')
+  examples = [];
+  for (let fpath of files) {
+    desc = await getFirstLine(fpath);
+    let m = desc.match(/^\s*#\s+(.*)/);
+    if (m) examples.push({name: baseName(fpath), desc: m[1]});
+  }
 };
 
-update_examples();
+(async function() {
+  await update_examples();
+  console.log(examples);
+})();
 
 app.use(bodyParser.json());  // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({
@@ -103,12 +125,12 @@ app.post('/submit', async function(req, res) {
     }
     child_process.exec(
         `./a.out ./example/${fname}.s > ./example/${fname}.trace`,
-        {shell: '/bin/bash'}, function(error, stdout, stderr) {
+        {shell: '/bin/bash'}, async function(error, stdout, stderr) {
           if (error) {
             res.send(err);
             return console.log(error);
           }
-          update_examples();
+          await update_examples();
           res.send(`${fname} is submitted!`);
         });
   });

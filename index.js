@@ -202,8 +202,10 @@ submit.onclick = function() {
   let src_code = editor.getDoc().getValue();
 
   xhr.onreadystatechange = function() {
-    if (xhr.readyState == XMLHttpRequest.DONE)
+    if (xhr.readyState == XMLHttpRequest.DONE){
+      fetch_example_list();
       alert(xhr.responseText);
+    }
   };
 
   xhr.send(JSON.stringify({src: src_code}));
@@ -252,12 +254,12 @@ async function fetch_example_list()
   let e = document.getElementById("examples");
   e.innerHTML = '';
 
-  for(let fname of examples) {
+  for(let item of examples) {
     let htmlNode = document.createElement('a');
     htmlNode.className = 'example';
-    htmlNode.innerText = fname;
+    htmlNode.innerText = item.desc;
     htmlNode.href = `#`;
-    htmlNode.onclick = ()=>fetch_example(fname);
+    htmlNode.onclick = ()=>fetch_example(item.name);
     e.appendChild(htmlNode);
   }
 }
