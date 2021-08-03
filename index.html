@@ -19,14 +19,68 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.62.2/mode/gas/gas.min.js"></script>
 
     <style type="text/css">
-        .editor {
+        #title {
             position: absolute;
-            top: 50px;
+            width: 100%;
+            height: 30px;
+            padding: 5px;
+            background-color: rgb(164, 7, 212);
+            color: white;
+            font-weight: 700;
+            font-size: larger;
+            overflow: hidden;
+        }
+
+        #toolbar {
+            position: absolute;
+            height: 30px;
+            padding-top: 5px;
+            padding-left: 10px;
+            margin: 0px;
+            right: 0;
+            top: 0px;
+            left: 260px;
+            display: flex;
+            z-index: 10;
+            overflow: hidden;
+        }
+
+        #left_panel {
+            position: absolute;
+            top: 40px;
+            left: 0px;
+            width: 260px;
+            bottom: 0;
+            padding: 5px;
+            margin: 0px;
+            background-color: rgb(244, 245, 247);
+            overflow:auto;
+            box-shadow: 1px 0px 1px rgba(0, 0, 0, .25);
+            z-index: 10;
+        }
+
+        #right_panel {
+            position: absolute;
+            top: 40px;
+            left: 260px;
             right: 0;
             bottom: 0;
-            left: 0;
+            padding: 0;
+            margin: 0;
+            background-color: royalblue;
+            overflow: hidden;
+        }
+
+        .editor {
+            position: absolute;
+            top: 0px;
+            width: 100%;
+            bottom: 0;
+            padding: 0;
+            margin: 0;
             font-size: 12px;
         }
+
 
         .inline_widget {
             color: gray;
@@ -80,74 +134,85 @@
             background-color: lightskyblue;
         }
 
-        #step {
-            width: 100%;
+        #run {
+            padding: 5px;
+        }
+
+        #submit {
+            display: none;
+            padding: 5px;
         }
 
         #step_text {
-            display: none;
+            padding: 5px;
+            font-size: small;
+        }
+
+        #right {
+            width: 100%;
+            padding: 5px;
+            padding-right: 20px;
         }
 
         #step {
             width: 100%;
-            display: none;
+        }
+
+        body {
+            margin: 0px;
+            font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+            overflow: hidden;
+        }
+
+        .example{
+            display: block;
+            color: rgb(66, 82, 110);
         }
     </style>
 </head>
 
 <body>
-    <div>
-        <button id=run>RUN</button>
-        <span id="step_text">Step: 0/0</span>
-        <input type="range" id="step" value="0" max="0">
+    <div id=title>
+        ASM analyzer
+        <div id=toolbar>
+            <button id=run>RUN</button>
+            <button id=submit>SUBMIT</button>
+            <span id="step_text">Step:0/0</span>
+            <div id=right>
+                <input type="range" id="step" value="0" max="0">
+            </div>
+        </div>
     </div>
 
-    <div class="editor">
-        <textarea id=editor>
-# ----------------------------------------------------------------------------------------
-# GAS source file
-# ----------------------------------------------------------------------------------------
-    .intel_syntax noprefix
 
-    .global _start
+    <div id=left_panel>
+        <b>Table of contents</b>
+        <div id="examples">
+        <a class=example>dsdsdsd1</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        <a class=example>dsdsdsd2</a>
+        </div>
+    </div>
 
-    .data
-data1:
-    .float 0.1, 0.2, 0.3, 0.4, 0.1, 0.2, 0.3, 0.4
-data2:
-    .float 0.4, 0.3, 0.2, 0.1
-message:
-    .ascii  "Helloworld!\n"
+    <div id=right_panel>
+        <div class=editor>
+            <textarea id=editor>
+                Hello, world!
+            </textarea>
+        </div>
 
-    .text
-_start:
-
-    movdqu  xmm1, data1
-    movdqu  xmm2, data2
-    movups  xmm0, xmm1
-    cmpltps xmm0, xmm2
-    blendvps xmm1,xmm2   # xmm0 is the mask
-
-    mov     rax, 0
-    mov     rdi, 20
-_loop:
-    add     rax, 1
-    cmp     rax, rdi
-    jl      _loop
-    mov     rsi,message          # address of string to output
-_next:
-    mov     rdx, 13               # number of bytes
-
-    # exit(0)
-    mov     rax, 60               # system call 60 is exit
-    xor     rdi, rdi              # we want return code 0
-    syscall                         # invoke operating system to exit
-        </textarea>
     </div>
 </body>
 
 <footer>
     <script src="./index.js"></script>
 </footer>
+
 
 </html>

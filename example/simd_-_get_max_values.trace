@@ -1,0 +1,19 @@
+[asm_analyzer] assembly source & executable:  ./example/simd_-_get_max_values.s  ./a1.out
+[asm_analyzer] compilation: gcc -g -no-pie -nostdlib ./example/simd_-_get_max_values.s -o ./a1.out
+[asm_analyzer] disassemble: objdump -d -l -w -M intel ./a1.out
+xsave_size = 1088 bytes, avx_state_off=576
+[asm_analyzer] child process 2497 start...
+	rsp=0x7fffc8937ac0
+	eflags=0x200 []
+./example/simd_-_get_max_values.s:17  40010c:  movdqu xmm1,XMMWORD PTR ds:0x60012a    #f3 0f 6f 0c 25 2a 01 60 00 
+	eflags=0x202 []
+	xmm1 = (0.100000,0.200000,0.300000,0.400000)	0x3dcccccd 0x3e4ccccd 0x3e99999a 0x3ecccccd
+./example/simd_-_get_max_values.s:18  400115:  movdqu xmm2,XMMWORD PTR ds:0x60013a    #f3 0f 6f 14 25 3a 01 60 00 
+	xmm2 = (0.400000,0.300000,0.200000,0.100000)	0x3ecccccd 0x3e99999a 0x3e4ccccd 0x3dcccccd
+./example/simd_-_get_max_values.s:19  40011e:  movups xmm0,xmm1        #0f 10 c1 
+	xmm0 = (0.100000,0.200000,0.300000,0.400000)	0x3dcccccd 0x3e4ccccd 0x3e99999a 0x3ecccccd
+./example/simd_-_get_max_values.s:20  400121:  cmpltps xmm0,xmm2       #0f c2 c2 01 
+	xmm0 = (-nan,-nan,0.000000,0.000000)	0xffffffff 0xffffffff 0x00000000 0x00000000
+./example/simd_-_get_max_values.s:21  400125:  blendvps xmm1,xmm2,xmm0    #66 0f 38 14 ca 
+	xmm1 = (0.400000,0.300000,0.300000,0.400000)	0x3ecccccd 0x3e99999a 0x3e99999a 0x3ecccccd
+[asm_analyzer] exception : Tracee is running at unknown RIP: 0x40012a

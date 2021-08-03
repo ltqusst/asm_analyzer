@@ -1,0 +1,145 @@
+[asm_analyzer] assembly source & executable:  ./example/hello.s  ./a1.out
+[asm_analyzer] compilation: gcc -g -no-pie -nostdlib ./example/hello.s -o ./a1.out
+[asm_analyzer] disassemble: objdump -d -l -w -M intel ./a1.out
+xsave_size = 1088 bytes, avx_state_off=576
+[asm_analyzer] child process 32743 start...
+	rsp=0x7ffe38bb32c0
+	eflags=0x200 []
+./example/hello.s:24  40010c:  movdqu xmm1,XMMWORD PTR ds:0x60015c    #f3 0f 6f 0c 25 5c 01 60 00 
+	eflags=0x202 []
+	xmm1 = (0.100000,0.200000,0.300000,0.400000)	0x3dcccccd 0x3e4ccccd 0x3e99999a 0x3ecccccd
+./example/hello.s:25  400115:  movdqu xmm2,XMMWORD PTR ds:0x60017c    #f3 0f 6f 14 25 7c 01 60 00 
+	xmm2 = (0.400000,0.300000,0.200000,0.100000)	0x3ecccccd 0x3e99999a 0x3e4ccccd 0x3dcccccd
+./example/hello.s:26  40011e:  movups xmm0,xmm1        #0f 10 c1 
+	xmm0 = (0.100000,0.200000,0.300000,0.400000)	0x3dcccccd 0x3e4ccccd 0x3e99999a 0x3ecccccd
+./example/hello.s:27  400121:  cmpltps xmm0,xmm2       #0f c2 c2 01 
+	xmm0 = (-nan,-nan,0.000000,0.000000)	0xffffffff 0xffffffff 0x00000000 0x00000000
+./example/hello.s:28  400125:  blendvps xmm1,xmm2,xmm0    #66 0f 38 14 ca 
+	xmm1 = (0.400000,0.300000,0.300000,0.400000)	0x3ecccccd 0x3e99999a 0x3e99999a 0x3ecccccd
+./example/hello.s:30  40012a:  mov    rax,0x1          #48 c7 c0 01 00 00 00 
+	rax=0x1
+./example/hello.s:31  400131:  mov    rdi,0x14         #48 c7 c7 14 00 00 00 
+	rdi=0x14
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x2
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x297 [ +CF  +AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x3
+	eflags=0x206 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x293 [ +CF  +AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x4
+	eflags=0x202 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x5
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x6
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x7
+	eflags=0x202 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x8
+	eflags=0x202 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x9
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xa
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xb
+	eflags=0x202 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xc
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xd
+	eflags=0x202 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xe
+	eflags=0x202 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x287 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0xf
+	eflags=0x206 [ -CF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x283 [ +CF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x10
+	eflags=0x212 [ -CF  +AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x297 [ +CF  AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x11
+	eflags=0x206 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x293 [ +CF  +AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x12
+	eflags=0x206 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x293 [ +CF  +AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x13
+	eflags=0x202 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x297 [ +CF  +AF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:33  400138:  add    rax,0x1          #48 83 c0 01 
+	rax=0x14
+	eflags=0x206 [ -CF  -AF ]
+./example/hello.s:34  40013c:  cmp    rax,rdi          #48 39 f8 
+	eflags=0x246 [ +ZF ]
+./example/hello.s:35  40013f:  jl     400138 <_loop>    #7c f7 
+./example/hello.s:36  400141:  mov    rsi,QWORD PTR ds:0x60018c    #48 8b 34 25 8c 01 60 00 
+	rsi=0x726f776f6c6c6548
+./example/hello.s:38  400149:  mov    rdx,0xd          #48 c7 c2 0d 00 00 00 
+	rdx=0xd
+./example/hello.s:41  400150:  mov    rax,0x1          #48 c7 c0 01 00 00 00 
+	rax=0x1
+./example/hello.s:42  400157:  xor    rdi,rdi          #48 31 ff 
+	rdi=0x0
+./example/hello.s:43  40015a:  syscall                 #0f 05 
+[asm_analyzer] exception : Tracee is not allowed to do syscall!
